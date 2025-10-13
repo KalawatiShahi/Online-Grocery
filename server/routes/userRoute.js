@@ -5,9 +5,9 @@ import authUser from '../middlewares/authUser.js';
 
 const userRouter = express.Router();
 
-userRouter.post('/register', register);    // ✅ Good
-userRouter.post('/login', login);          // ✅ Good
-userRouter.get('/is-auth', authUser, isAuth); // ✅ Good - protected route
-userRouter.get('/logout', authUser, logout);  // ✅ Good - protected route
+userRouter.post('/register', register);    
+userRouter.post('/login', login);         
+userRouter.get('/is-auth', authUser, isAuth); 
+userRouter.get('/logout', authUser, logout);  
 
 export default userRouter;
