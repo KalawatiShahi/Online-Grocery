@@ -132,7 +132,8 @@ const Cart = () => {
 
         {cartArray.length > 0 ? (
           <>
-            <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
+            <div className="grid grid-cols-[2fr_1fr_1fr]
+             text-gray-500 text-base font-medium pb-3">
               <p className="text-left">Product Details</p>
               <p className="text-center">Subtotal</p>
               <p className="text-center">Action</p>
@@ -141,7 +142,8 @@ const Cart = () => {
             {cartArray.map((product) => (
               <div
                 key={product._id}
-                className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
+                className="grid grid-cols-[2fr_1fr_1fr]
+                 text-gray-500 items-center text-sm md:text-base font-medium pt-3"
               >
                 <div className="flex items-center md:gap-6 gap-3">
                   <div
@@ -151,7 +153,8 @@ const Cart = () => {
                       );
                       scrollTo(0, 0);
                     }}
-                    className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded"
+                    className="cursor-pointer w-24 h-24 flex items-center
+                     justify-center border border-gray-300 rounded"
                   >
                     <img
                       className="max-w-full h-full object-cover"
@@ -209,7 +212,8 @@ const Cart = () => {
                 navigate("/products");
                 scrollTo(0, 0);
               }}
-              className="mt-6 px-6 py-3 bg-primary text-white rounded hover:bg-primary-dull transition"
+              className="mt-6 px-6 py-3 bg-primary text-white rounded
+               hover:bg-primary-dull transition"
             >
               Start Shopping
             </button>
@@ -218,7 +222,8 @@ const Cart = () => {
       </div>
 
       {/* Order Summary */}
-      <div className="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
+      <div className="max-w-[360px] w-full bg-gray-100/40 p-5 
+      max-md:mt-16 border border-gray-300/70">
         <h2 className="text-xl font-medium">Order Summary</h2>
         <hr className="border-gray-300 my-5" />
 

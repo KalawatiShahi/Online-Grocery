@@ -57,10 +57,12 @@ const ProductList = () => {
   };
 
   return (
-    <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col justify-between">
+    <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll 
+    flex flex-col justify-between">
       <div className="w-full md:p-10 p-4">
         <h2 className="pb-4 text-lg font-medium">All Products</h2>
-        <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
+        <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden 
+        rounded-md bg-white border border-gray-500/20">
           <table className="md:table-auto table-fixed w-full overflow-hidden">
             <thead className="text-gray-900 text-sm text-left">
               <tr>
@@ -99,13 +101,15 @@ const ProductList = () => {
                   <td className="px-4 py-3 flex gap-2">
                     <button
                       onClick={() => updateProductPrice(product._id)}
-                      className="bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition"
+                      className="bg-blue-500 text-white text-xs px-3 py-1 rounded
+                       hover:bg-blue-600 transition"
                     >
                       Update
                     </button>
                     <button
                       onClick={() => deleteProduct(product._id)}
-                      className="bg-red-500 text-white text-xs px-3 py-1 rounded hover:bg-red-600 transition"
+                      className="bg-red-500 text-white text-xs px-3 py-1 rounded
+                       hover:bg-red-600 transition"
                     >
                       Delete
                     </button>

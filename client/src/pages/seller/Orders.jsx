@@ -56,7 +56,8 @@ const Orders = () => {
           <p className="text-gray-500">No orders found.</p>
         ) : (
           orders.map((order, index) => (
-            <div key={index} className="flex flex-col md:items-center md:flex-row gap-5 justify-between
+            <div key={index} className="flex flex-col md:items-center
+             md:flex-row gap-5 justify-between
               p-5 max-w-4xl rounded-md border border-gray-300">
               
               <div className="flex gap-5 max-w-80">
@@ -87,7 +88,8 @@ const Orders = () => {
               {/* Delete Button */}
               <button
                 onClick={() => handleDelete(order._id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded self-center md:self-auto"
+                className="bg-red-600 hover:bg-red-700
+                 text-white px-3 py-1 rounded self-center md:self-auto"
                 type="button"
               >
                 Delete

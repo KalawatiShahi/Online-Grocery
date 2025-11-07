@@ -92,7 +92,8 @@ const AddAddress = () => {
 
             <InputField name='phone' type='text' placeholder='Phone' value={address.phone} onChange={handleChange} />
 
-            <button type='submit' className='w-full mt-6 bg-primary text-white py-3 hover:bg-primary-dull transition cursor-pointer uppercase'>
+            <button type='submit' className='w-full mt-6 bg-primary text-white py-3
+             hover:bg-primary-dull transition cursor-pointer uppercase'>
               Save Address
             </button>
           </form>
