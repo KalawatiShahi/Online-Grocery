@@ -1,0 +1,22 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "server.js",
+            "use": "@vercel/node",
+            "conflig":{
+                "includeFiles": [
+                    "dis/**"
+                ]
+            }
+             
+        }
+    ],
+    "route":[
+        {
+            "src": "(./*)",
+            "dest": "server.js"
+        }
+    ]
+
+}
