@@ -16,7 +16,7 @@ const ProductList = () => {
       [id]: value,
     }));
   };
-
+   
   const updateProductPrice = async (id) => {
     const newPrice = editablePrices[id];
     if (!newPrice || isNaN(newPrice)) {

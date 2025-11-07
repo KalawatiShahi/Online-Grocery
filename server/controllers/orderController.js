@@ -1,18 +1,17 @@
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
-import User from "../models/User.js";
 import { cloudinary } from "../configs/cloudinary.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// Place Order (Cash on Delivery)
+// Place Order (COD)
 export const placeOrder = async (req, res) => {
   try {
     const { userId, addressId, items } = req.body;
     if (!userId || !addressId || !items?.length) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
+      return res.status(400).json({ success: false, message: "Check your internet" });
     }
 
     let amount = 0;
@@ -102,7 +101,7 @@ export const placeOrderStripe = async (req, res) => {
   }
 };
 
-// Stripe Webhook Handler
+// Stripe webhook handler
 export const stripeWebhookHandler = async (req, res) => {
   const sig = req.headers["stripe-signature"];
   let event;
@@ -110,39 +109,30 @@ export const stripeWebhookHandler = async (req, res) => {
   try {
     event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
   } catch (err) {
-    console.error("⚠️ Webhook signature verification failed:", err.message);
+    console.error("Webhook signature verification failed:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  switch (event.type) {
-    case "checkout.session.completed": {
-      const session = event.data.object;
-      const orderId = session.metadata.orderId;
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const orderId = session.metadata.orderId;
 
-      try {
-        await Order.findByIdAndUpdate(orderId, {
-          isPaid: true,
-          paymentIntentId: session.payment_intent,
-          paymentDate: new Date(),
-        });
-
-        console.log("✅ Stripe payment completed. Order marked as paid.");
-      } catch (err) {
-        console.error("❌ Could not update order:", err);
-      }
-
-      break;
+    try {
+      await Order.findByIdAndUpdate(orderId, {
+        isPaid: true,
+        paymentIntentId: session.payment_intent,
+        paymentDate: new Date(),
+      });
+      console.log("Stripe payment completed. Order marked as paid.");
+    } catch (err) {
+      console.error("Could not update order:", err);
     }
-
-    default:
-      console.warn(`Unhandled event type: ${event.type}`);
-      break;
   }
 
   res.json({ received: true });
 };
 
-// Get Orders for a User
+// Get user orders
 export const getUserOrders = async (req, res) => {
   try {
     let orders = await Order.find({ userId: req.userId })
@@ -152,6 +142,7 @@ export const getUserOrders = async (req, res) => {
       })
       .populate("address");
 
+    // Convert image IDs to URLs
     orders = orders.map(order => {
       order.items = order.items.map(item => {
         if (item.product && Array.isArray(item.product.image)) {
@@ -171,7 +162,7 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
-// Get All Orders (Admin)
+// Get all orders (Admin/Seller)
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({
@@ -184,7 +175,45 @@ export const getAllOrders = async (req, res) => {
 
     res.json({ success: true, orders });
   } catch (error) {
-    console.error("❌ getAllOrders error:", error);
+    console.error("getAllOrders error:", error);
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// DELETE order by seller/admin
+export const deleteOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    if (!req.isAdmin && !req.isSeller) {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+
+    const order = await Order.findById(orderId).populate("items.product");
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    if (req.isSeller) {
+      const sellerId = req.sellerId;
+      const ownsProduct = order.items.some(
+        (item) => item.product?.seller?.toString() === sellerId
+      );
+
+      if (!ownsProduct) {
+        return res.status(403).json({
+          success: false,
+          message: "You can only delete orders containing your products",
+        });
+      }
+    }
+
+    await Order.findByIdAndDelete(orderId);
+
+    res.json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    res.status(500).json({ success: false, message: "Failed to delete order" });
   }
 };

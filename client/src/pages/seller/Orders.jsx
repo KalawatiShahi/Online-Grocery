@@ -10,15 +10,13 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get('/api/orders/seller') // ✅ Fixed endpoint
-      console.log('Fetched orders:', data) // 🔍 Debug
+      const { data } = await axios.get('/api/orders/seller') // Your seller orders endpoint
       if (data.success) {
         setOrders(data.orders)
       } else {
         toast.error(data.message)
       }
     } catch (error) {
-      console.error('Error fetching orders:', error)
       toast.error(error.message)
     } finally {
       setLoading(false)
@@ -28,6 +26,24 @@ const Orders = () => {
   useEffect(() => {
     fetchOrders()
   }, [])
+
+  // Delete handler
+  const handleDelete = async (orderId) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+
+    try {
+      const { data } = await axios.delete(`/api/orders/seller/${orderId}`) // Your delete endpoint
+      if (data.success) {
+        toast.success(data.message)
+        setOrders(prev => prev.filter(order => order._id !== orderId)) // Remove deleted order from state
+      } else {
+        toast.error(data.message || "Failed to delete order")
+      }
+    } catch (error) {
+      toast.error("Server error while deleting order")
+      console.error(error)
+    }
+  }
 
   return (
     <div className='no-scrollbar flex-1 h-[95vh] overflow-y-scroll'>
@@ -67,6 +83,15 @@ const Orders = () => {
                 <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
                 <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
               </div>
+
+              {/* Delete Button */}
+              <button
+                onClick={() => handleDelete(order._id)}
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded self-center md:self-auto"
+                type="button"
+              >
+                Delete
+              </button>
             </div>
           ))
         )}
