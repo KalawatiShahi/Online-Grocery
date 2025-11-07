@@ -1,6 +1,18 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "server/**/*.js", "use": "@vercel/node" }
+  "projects": {
+    "client": {
+      "rootDirectory": "client",
+      "buildCommand": "npm install && npm run build",
+      "outputDirectory": "dist"
+    },
+    "server": {
+      "rootDirectory": "server",
+      "buildCommand": "npm install",
+      "outputDirectory": null
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
