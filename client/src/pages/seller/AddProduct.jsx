@@ -16,6 +16,17 @@ const AddProduct = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
+     if(!name) return
+
+    if(files.includes(name)){
+       setName("");
+      return
+    } 
+    
+    setName((prevFiles)=>[...prevFiles, name]);
+
+    setName("");
+    
     try {
       const productData = {
         name,
