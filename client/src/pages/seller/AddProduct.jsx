@@ -18,7 +18,7 @@ const AddProduct = () => {
 
      if(!name) return
 
-    if(files.includes(name)){
+    if(!files.includes(name)){
        setName("");
       return
     } 
